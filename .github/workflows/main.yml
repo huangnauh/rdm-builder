@@ -9,12 +9,12 @@ name: CI for redis desktop manager
 on:
   push:
     branches: [ master ]
-    paths-ignore: 
+    paths-ignore:
       - 'README.md'
       - 'LICENSE'
   pull_request:
     branches: [ master ]
-    paths-ignore: 
+    paths-ignore:
       - 'README.md'
       - 'LICENSE'
 
@@ -76,10 +76,10 @@ jobs:
         submodules: 'recursive'
         ref: ${{ env.RDM_REF }}
 
-    # install QT   
+    # install QT
     - name: install QT
       uses: jurplel/install-qt-action@v2
-      with: 
+      with:
         version: '5.15.1'
         modules: 'qtcharts'
 
@@ -100,7 +100,7 @@ jobs:
         cmake -G "Visual Studio 16 2019" -A x64 -DLZ4_BUNDLED_MODE=ON -DBUILD_SHARED_LIBS=ON -B .
         cmake --build . --config "Release"
 
-#    # install python3  
+#    # install python3
 #    - name: install Python3
 #      uses: actions/setup-python@v2
 #      with:
@@ -176,12 +176,12 @@ jobs:
         makensis.exe /V1 /DVERSION=${{ env.VERSION }} ../installer.nsi
 
     - name: Upload Release Asset
-      id: upload-release-asset 
+      id: upload-release-asset
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        # upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        # upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
         upload_url: ${{ needs.create_release.outputs.upload_url }}
         asset_path: rdm/build/windows/installer/rdm-${{ env.VERSION }}.exe
         asset_name: rdm-${{ env.VERSION }}.exe
@@ -207,24 +207,24 @@ jobs:
         cmake -DLZ4_BUNDLED_MODE=ON -DBUILD_SHARED_LIBS=ON
         make -s -j 8
 
-    # install QT   
+    # install QT
     - name: install QT
       uses: jurplel/install-qt-action@v2
-      with: 
+      with:
         version: '5.15.1'
         modules: 'qtcharts'
-    
+
     - name: copy info.plist
       run: |
         cd rdm
         cd ./src && cp ./resources/Info.plist.sample ./resources/Info.plist
-    
+
 #     - name: setup python
 #       run: |
 #         brew unlink python@3.9
 #         brew install python@3.7
 #         brew link --overwrite python@3.7
-    
+
     # 使用私有库,egg-links时-t不能同时使用，--user解决权限问题
     # https://github.com/UnitedIncome/serverless-python-requirements/issues/240
     # https://github.com/pypa/pip/issues/4390
@@ -283,7 +283,7 @@ jobs:
         macdeployqt ./RDM.app -qmldir=../../../src/qml -always-overwrite -dmg
 
     - name: Upload Release Asset
-      id: upload-release-asset 
+      id: upload-release-asset
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
